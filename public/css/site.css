@@ -2,3 +2,10 @@
 .classy-header__nav a{ margin-right: 10px; }
 .ui.dark{ background:#111; color:#e8e8e8; }
 .container{ padding: 16px; }
+
+.cta-row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:10px 0 6px; }
+.pill { padding:6px 10px; border:1px solid #d5d7df; border-radius:999px; background:#fff; }
+.btn { display:inline-flex; align-items:center; gap:6px; }
+.form-inline { display:flex; gap:8px; align-items:center; }
+.codebox { background:#0a0a0a; color:#e6e6e6; padding:12px; border-radius:8px; overflow:auto; }
+.gap { margin:14px 0; border:0; border-top:1px solid #e4e6ee; }

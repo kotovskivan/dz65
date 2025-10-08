@@ -23,3 +23,87 @@ npm run dev
 - Пароль: `admin123`
 
 > Щоб використати ваш Passport з ДЗ-63 — просто замініть вміст `config/passport.js` на ваш.
+## DZ65 — CRUD з MongoDB (оновлений)
+
+### Аутентифікація
+- Сторінки:
+  - `GET /login` — вхід
+  - `POST /login` — обробка входу
+  - `GET /register` — реєстрація
+  - `POST /register` — створення користувача
+  - `POST /logout` — вихід
+- Доступ до змінних API (`POST/PATCH/PUT/DELETE`) лише після входу (сесія Passport).
+
+### Колекція: `items`
+
+#### Read (з фільтрами, проекцією, сортуванням, пагінацією)
+```
+GET /api/items?filter=type:scooter,isActive:true&projection=name:1,price:1&sort=createdAt:-1&limit=20&skip=0
+```
+
+#### Read one
+```
+GET /api/items/:id
+```
+
+#### Create
+```
+POST /api/items
+Body: { "name":"Oil 10W-40", "price": 299, "type":"oil" }
+```
+
+#### Create many
+```
+POST /api/items/bulk
+Body: [{ "name": "A" }, { "name":"B" }]
+```
+
+#### Update one (partial, $set)
+```
+PATCH /api/items/:id
+Body: { "$set": { "price": 349 } }
+```
+
+#### Update many
+```
+PATCH /api/items
+Body: { "filter": { "type":"oil" }, "update": { "$set": { "isActive": true } } }
+```
+
+#### Replace one (повна заміна документа)
+```
+PUT /api/items/:id
+Body: { "name":"New name", "price": 100 }   # старі поля перезаписуються
+```
+
+#### Delete one
+```
+DELETE /api/items/:id
+```
+
+#### Delete many
+```
+DELETE /api/items
+Body: { "filter": { "type":"oil" } }
+```
+
+### Приклади cURL
+```bash
+# Login (запам'ятати cookies.txt)
+curl -c cookies.txt -d "username=admin&password=admin123" -X POST http://localhost:3000/login
+
+# Insert one
+curl -b cookies.txt -H "Content-Type: application/json" -d '{"name":"N1"}' http://localhost:3000/api/items -X POST
+
+# Find with projection
+curl "http://localhost:3000/api/items?projection=name:1,price:1&limit=5"
+
+# Update one
+curl -b cookies.txt -H "Content-Type: application/json" -d '{"$set":{"price":123}}' -X PATCH http://localhost:3000/api/items/<ID>
+
+# Replace one
+curl -b cookies.txt -H "Content-Type: application/json" -d '{"name":"R","price":1}' -X PUT http://localhost:3000/api/items/<ID>
+
+# Delete one
+curl -b cookies.txt -X DELETE http://localhost:3000/api/items/<ID>
+```
