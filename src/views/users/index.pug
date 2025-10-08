@@ -1,0 +1,8 @@
+extends ../_layout.pug
+
+block content
+  h2 Користувачі (PUG)
+  ul
+    each u in users
+      li
+        a(href=`/users/${u.id}`) #{u.name} (#{u.email})

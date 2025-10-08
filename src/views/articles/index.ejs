@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8"/>
+    <title><%= title %></title>
+    <link rel="icon" href="/favicon.ico"/>
+    <link rel="stylesheet" href="/css/desktop.css?v=2"/>
+    <link rel="stylesheet" href="/css/mobile.css?v=2" media="(max-width: 767px)"/>
+  </head>
+  <body class="ui <%= theme || '' %>">
+    <header class="classy-header">
+      <div class="classy-header__inner">
+        <a class="classy-header__brand" href="/">DZ64</a>
+        <nav class="classy-header__nav">
+          <a class="classy-header__link" href="/users">Користувачі (PUG)</a>
+          <a class="classy-header__link" href="/articles">Статті (EJS)</a>
+          <a class="classy-header__link" href="/articles/new">Нова стаття</a>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      <h2>Статті (MongoDB → EJS)</h2>
+      <% if (!items || !items.length) { %>
+        <p>Немає статей. Запустіть <code>npm run seed</code> або створіть записи вручну.</p>
+      <% } else { %>
+        <table>
+          <thead><tr><th>Заголовок</th><th>Дата</th></tr></thead>
+          <tbody>
+          <% items.forEach(a => { %>
+            <tr>
+              <td><a href="/articles/<%= a._id %>"><%= a.title %></a></td>
+              <td><%= new Date(a.createdAt).toLocaleString('uk-UA') %></td>
+            </tr>
+          <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+    </main>
+  </body>
+</html>

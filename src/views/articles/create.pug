@@ -1,0 +1,7 @@
+extends ../_layout.pug
+block content
+  h2 Нова стаття
+  form(method="post" action="/articles/new").form-row
+    input(type="text" name="title" placeholder="Заголовок" required)
+    textarea(name="body" placeholder="Текст статті" rows="6" style="width:100%")
+    button(type="submit") Зберегти

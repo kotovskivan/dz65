@@ -1,0 +1,25 @@
+extends ./_layout.pug
+
+block content
+  if user
+    p.alert Ви увійшли як #[strong #{user.name || user.email}].
+    p: a(href="/logout") Вийти
+  else
+    p.alert Ви гість. Увійдіть або зареєструйтесь нижче.
+
+  h1 MongoDB Atlas + Passport
+  p Це головна сторінка. Перейдіть до #[a(href="/articles") /articles], щоб побачити читання з БД.
+
+  h3 Швидкий доступ
+  form(method="post" action="/login").form-row
+    input(type="email" name="email" placeholder="Email" required)
+    input(type="password" name="password" placeholder="Пароль" required)
+    button(type="submit") Увійти
+
+  form(method="post" action="/register" style="margin-top:10px").form-row
+    input(type="text" name="name" placeholder="Ім'я")
+    input(type="email" name="email" placeholder="Email" required)
+    input(type="password" name="password" placeholder="Пароль" required)
+    button(type="submit") Реєстрація
+
+  p Тема: #[a(href="/theme/light") light] | #[a(href="/theme/dark") dark]

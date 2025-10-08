@@ -1,0 +1,8 @@
+extends ../_layout.pug
+block content
+  h2 Реєстрація (Passport)
+  form(method="post" action="/register").form-row
+    input(type="text" name="name" placeholder="Ім'я")
+    input(type="email" name="email" placeholder="Email" required)
+    input(type="password" name="password" placeholder="Пароль" required)
+    button(type="submit") Зареєструватись

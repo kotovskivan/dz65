@@ -1,0 +1,9 @@
+<% if (typeof layout === 'function') { layout('layout') } %>
+<h2>Реєстрація</h2>
+<form method="post" action="/register" class="form">
+  <label>Логін <input type="text" name="username" required></label>
+  <label>Пароль <input type="password" name="password" required></label>
+  <button class="btn" type="submit">Зареєструватися</button>
+  <% if (query && query.exists) { %><p style="color:#c00;">Користувач вже існує</p><% } %>
+  <% if (query && query.error) { %><p style="color:#c00;">Заповніть всі поля</p><% } %>
+</form>

@@ -1,0 +1,22 @@
+doctype html
+html(lang="uk")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    title #{title || 'PUG сторінка'}
+    link(rel="icon", href="/favicon.ico")
+    link(rel="stylesheet", href="/css/desktop.css?v=2")
+    link(rel="stylesheet", href="/css/mobile.css?v=2" media="(max-width: 767px)")
+  body(class=`ui ${theme || ''}`)
+    header.classy-header
+      .classy-header__inner
+        a.classy-header__brand(href="/") DZ64
+        nav.classy-header__nav
+          a.classy-header__link(href="/users") Користувачі (PUG)
+          a.classy-header__link(href="/articles") Статті (EJS)
+          a.classy-header__link(href="/protected_passport") Захист (Passport)
+          a.classy-header__link(href="/protected") Захист (JWT)
+    main.container
+      block content
+    footer.footer
+      p.footer__p © #{new Date().getFullYear()} Demo

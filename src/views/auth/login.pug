@@ -1,0 +1,7 @@
+extends ../_layout.pug
+block content
+  h2 Вхід (Passport)
+  form(method="post" action="/login").form-row
+    input(type="email" name="email" placeholder="Email" required)
+    input(type="password" name="password" placeholder="Пароль" required)
+    button(type="submit") Увійти

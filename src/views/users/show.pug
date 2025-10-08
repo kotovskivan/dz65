@@ -1,0 +1,6 @@
+extends ../_layout.pug
+
+block content
+  h2= user.name
+  p Email: #{user.email}
+  p: a(href="/users") ← Назад до списку
