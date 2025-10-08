@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-"scripts": {
-  "dev": "node --env-file=.env server.local.js",
-  "start": "NODE_ENV=production node server.local.js"
-},
+  "scripts": {
+    "dev": "node --env-file=.env server.local.js",
+    "start": "NODE_ENV=production node server.local.js"
+  },
   "engines": {
     "node": ">=18.17"
   },
