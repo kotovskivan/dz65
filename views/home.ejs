@@ -1,58 +1,7 @@
 <% if (typeof layout === 'function') { layout('layout') } %>
 <h1>DZ65</h1>
 <p>Express + Passport + MongoDB CRUD</p>
-
-<div class="cta-row">
-  <% if (!currentUser) { %>
-    <a class="btn" href="/register">Реєстрація</a>
-    <a class="btn" href="/login">Вхід</a>
-  <% } else { %>
-    <span class="pill">Ви увійшли як <strong><%= currentUser.username %></strong></span>
-    <a class="btn" href="/protected">Захищена сторінка</a>
-    <form method="post" action="/logout" style="display:inline"><button class="btn">Вийти</button></form>
-  <% } %>
-  <a class="btn" href="/api/items" target="_blank">Перейти до API</a>
-</div>
-
-<hr class="gap"/>
-
-<section class="demo">
-  <h3>Демо-список items</h3>
-  <div class="row">
-    <button id="btnLoad" class="btn">Завантажити /api/items</button>
-    <% if (currentUser) { %>
-    <form id="createForm" class="form-inline">
-      <input type="text" id="nameInput" placeholder="Назва" required/>
-      <input type="number" id="priceInput" placeholder="Ціна" min="0" step="1"/>
-      <button class="btn" type="submit">Створити</button>
-    </form>
-    <% } %>
-  </div>
-  <pre id="out" class="codebox">Натисніть "Завантажити", щоб побачити дані...</pre>
-</section>
-
-<script>
-document.getElementById('btnLoad')?.addEventListener('click', async () => {
-  const r = await fetch('/api/items?projection=name:1,price:1,createdAt:1&limit=10&sort=createdAt:-1');
-  const j = await r.json();
-  document.getElementById('out').textContent = JSON.stringify(j, null, 2);
-});
-
-const form = document.getElementById('createForm');
-if (form) {
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('nameInput').value.trim();
-    const price = Number(document.getElementById('priceInput').value || 0);
-    const r = await fetch('/api/items', {
-      method:'POST',
-      headers:{ 'Content-Type':'application/json' },
-      body: JSON.stringify({ name, price })
-    });
-    const j = await r.json();
-    document.getElementById('out').textContent = JSON.stringify(j, null, 2);
-    document.getElementById('nameInput').value='';
-    document.getElementById('priceInput').value='';
-  });
-}
-</script>
+<ul>
+  <li>Читання (публічне): <code>/api/items</code></li>
+  <li>Зміни (авторизація): <code>POST/PATCH/PUT/DELETE</code> на <code>/api/items</code></li>
+</ul>

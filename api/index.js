@@ -1,5 +1,10 @@
 import serverless from 'serverless-http';
-import app from '../app_ejs.js';
+import app from '../src/app.js';
 
-export const config = { api: { bodyParser: false } };
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 export default serverless(app);

@@ -1,27 +1,22 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import bcrypt from 'bcrypt';
-import { getDB } from '../db.js';
+
+// Demo user — replace with your DZ63 logic if needed
+const DEMO_USER = { id: '1', username: 'admin', password: 'admin123' };
 
 passport.use(new LocalStrategy(async (username, password, done) => {
   try {
-    const user = await getDB().collection('users').findOne({ username });
-    if (!user) return done(null, false, { message: 'Невірний логін або пароль' });
-    const ok = await bcrypt.compare(password, user.passwordHash);
-    if (!ok) return done(null, false, { message: 'Невірний логін або пароль' });
-    return done(null, { id: String(user._id), username: user.username });
+    if (username === DEMO_USER.username && password === DEMO_USER.password) {
+      return done(null, { id: DEMO_USER.id, username: DEMO_USER.username });
+    }
+    return done(null, false, { message: 'Невірний логін або пароль' });
   } catch (err) {
     return done(err);
   }
 }));
 
 passport.serializeUser((user, done) => done(null, user.id));
-passport.deserializeUser(async (id, done) => {
-  try{
-    const user = await getDB().collection('users').findOne({ _id: new (await import('mongodb')).ObjectId(id) });
-    if (!user) return done(null, false);
-    done(null, { id: String(user._id), username: user.username });
-  }catch(err){
-    done(err);
-  }
+passport.deserializeUser((id, done) => {
+  if (id === DEMO_USER.id) return done(null, { id: DEMO_USER.id, username: DEMO_USER.username });
+  return done(null, false);
 });
