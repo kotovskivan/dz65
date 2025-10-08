@@ -23,7 +23,7 @@ app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Static for local dev (Vercel will also serve via routes rules)
+// Static (also served by Vercel routes)
 app.use('/css', express.static(path.join(__dirname, 'public/css')));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
@@ -49,6 +49,34 @@ app.use(passport.session());
 // Locals
 app.use((req,res,next)=>{ res.locals.currentUser = req.user || null; next(); });
 
+// Healthcheck (doesn't touch DB)
+app.get('/health', (req, res) => res.json({ ok: true }));
+
+// Lazy DB connect to avoid crashing function at cold start if env is missing
+let dbReadyPromise = null;
+async function ensureDB() {
+  if (!dbReadyPromise) {
+    const uri = process.env.MONGODB_URI;
+    const dbn = process.env.MONGODB_DBNAME || 'dz65';
+    if (!uri) {
+      console.warn('[WARN] MONGODB_URI is not set — API writes will fail, read-only pages will work.');
+      // don't throw; allow pages to render
+      dbReadyPromise = Promise.resolve();
+    } else {
+      dbReadyPromise = connectDB(uri, dbn).catch(err => {
+        console.error('[DB] connect error:', err?.message || err);
+        // prevent unhandled rejection on module import
+        // keep a resolved promise so app continues; API routes will still error on use
+        return;
+      });
+    }
+  }
+  return dbReadyPromise;
+}
+
+// Ensure DB before API that needs it
+app.use('/api', async (req, res, next) => { await ensureDB(); next(); });
+
 // Pages
 app.get('/', (req, res) => res.render('home', { title: 'DZ65' }));
 app.get('/protected', ensureAuthPage, (req, res) => res.render('protected', { title: 'Protected' }));
@@ -64,7 +92,13 @@ app.use((req, res) => {
   catch { return res.status(404).send('404'); }
 });
 
-// Connect DB before handling requests
-await connectDB(process.env.MONGODB_URI, process.env.MONGODB_DBNAME || 'dz65');
+// Global error handler (never crash the function)
+app.use((err, req, res, next) => {
+  console.error('[ERR]', err?.stack || err);
+  if (req.originalUrl.startsWith('/api/')) {
+    return res.status(500).json({ message: 'Internal error' });
+  }
+  return res.status(500).send('Internal error');
+});
 
 export default app;
